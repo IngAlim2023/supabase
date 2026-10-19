@@ -1,47 +1,47 @@
 import React, { useState } from "react";
 import { supabase } from "../../utils/supabase";
 import { useNavigate } from "react-router-dom";
-
 const Register: React.FC = () => {
-  const [emailS, setEmailS] = useState<string>("");
-  const [pw, setPw] = useState<string>("");
+  const [emailU, setEmailU] = useState<string>("");
+  const [passwordU, setPasswordU] = useState<string>("");
 
   const navigate = useNavigate();
-  const handlerRegistrarme = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    if (error) {
-      alert("No se logro hacer el registro");
-      return console.log(error);
-    }
 
-    alert("Verifica tu correo");
+  const handlerRegistro = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({ email, password });
+
+    if (error) {
+      return alert("No se logro registrar al usuario, intentalo más tarde");
+    }
+    alert("Usuario registrado, revisa tu correo");
 
     return navigate("/");
   };
+
   return (
     <div className="flex">
       <div>Registrate en nuesta app</div>
-      <div className="flex">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handlerRegistro(emailU, passwordU);
+        }}
+      >
         <input
           type="email"
-          placeholder="email"
-          onChange={(e) => setEmailS(e.target.value)}
+          placeholder="correo"
           autoComplete="off"
+          onChange={(e) => setEmailU(e.target.value)}
         />
         <input
           type="password"
           placeholder="contraseña"
           autoComplete="off"
-          onChange={(e) => setPw(e.target.value)}
+          onChange={(e) => setPasswordU(e.target.value)}
         />
 
-        <button onClick={() => handlerRegistrarme(emailS, pw)}>
-          registrarme
-        </button>
-      </div>
+        <button>Registrarme</button>
+      </form>
     </div>
   );
 };

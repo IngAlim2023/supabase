@@ -3,46 +3,50 @@ import { supabase } from "../../utils/supabase";
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const [emailS, setEmailS] = useState<string>("");
-  const [pw, setPw] = useState<string>("");
+  const [emailU, setEmailU] = useState<string>("");
+  const [passwordU, setPasswordU] = useState<string>("");
 
   const navigate = useNavigate();
 
-  const handlerRegistrarme = async (email: string, password: string) => {
+  const handlerLogin = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+
     if (error) {
-      alert("La contraseña o el correo estan errados");
-      return console.log(error);
+      return alert("No se logro iniciar sesión, revisa tus credenciales");
     }
 
-    alert("Ingresaste");
+    alert("Sesión iniciada");
 
-    return navigate("/dashboard");
+    return navigate("/");
   };
+
   return (
     <div className="flex">
-      <div>Ingresa a nuesta app</div>
-      <div className="flex">
+      <div>Ingresa a nuestro aplicativo</div>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handlerLogin(emailU, passwordU);
+        }}
+      >
         <input
           type="email"
-          placeholder="email"
-          onChange={(e) => setEmailS(e.target.value)}
+          placeholder="Correo"
           autoComplete="off"
+          onChange={(e) => setEmailU(e.target.value)}
         />
         <input
           type="password"
-          placeholder="contraseña"
+          placeholder="Contraseña"
           autoComplete="off"
-          onChange={(e) => setPw(e.target.value)}
+          onChange={(e) => setPasswordU(e.target.value)}
         />
-
-        <button onClick={() => handlerRegistrarme(emailS, pw)}>
-          registrarme
-        </button>
-      </div>
+        <button>Ingresar</button>
+      </form>
     </div>
   );
 };
